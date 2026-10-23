@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>کرکٹ اسکور — ایڈمن پینل</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1220;--panel:#17243a;--line:#2d405b;--green:#20c997;--gold:#ffcb55;--text:#f5f7fb;--muted:#aebbd0}*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#0b1220,#122b36);color:var(--text);font-family:Arial,sans-serif;padding:18px}.wrap{max-width:1000px;margin:auto}h1{text-align:center;color:var(--green)}.hint{color:var(--muted);line-height:1.7}.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}h2{margin-top:0;color:var(--gold);font-size:20px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}label{display:block;color:#dce5f3;font-size:14px;margin:9px 0 5px}input{width:100%;padding:12px;border:1px solid var(--line);border-radius:9px;background:#0b1525;color:white;font-size:16px}button{border:0;border-radius:10px;padding:12px 14px;font-size:16px;font-weight:bold;cursor:pointer;color:#06121a;background:var(--green)}button.secondary{background:#304762;color:white}button.gold{background:var(--gold)}button.red{background:#f15b64;color:white}.actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:12px}.status{padding:12px;border-radius:9px;background:#0b1525;color:var(--muted);line-height:1.6;overflow-wrap:anywhere}.row{display:flex;gap:10px;flex-wrap:wrap}.row button{flex:1}@media(max-width:600px){.grid{grid-template-columns:1fr}.actions{grid-template-columns:repeat(2,minmax(0,1fr))}body{padding:10px}}
+</style>
+</head><body><div class="wrap">
+<h1>🏏 لائیو کرکٹ — ایڈمن پینل</h1>
+<p class="hint">یہ پینل آپ کے اسکور بورڈ کو آن لائن اپڈیٹ کرے گا۔ پہلے config.js میں Firebase کی database URL ڈالیں اور اپنی ویب سائٹ پر تمام فائلیں اپ لوڈ کریں۔</p>
+<div class="panel"><h2>میچ اور ٹیمیں</h2><div class="grid">
+<div><label>میچ کا نام</label><input id="match" value="LIVE CRICKET MATCH"></div>
+<div><label>نیچے چلنے والا پیغام</label><input id="ticker" value="لائیو کرکٹ میچ — ہمارے ساتھ رہیے"></div>
+<div><label>پہلی ٹیم کا نام</label><input id="team1" value="Pakistan"></div><div><label>پہلی ٹیم کا جھنڈا/ایموجی</label><input id="flag1" value="🇵🇰"></div>
+<div><label>دوسری ٹیم کا نام</label><input id="team2" value="India"></div><div><label>دوسری ٹیم کا جھنڈا/ایموجی</label><input id="flag2" value="🇮🇳"></div>
+</div></div>
+<div class="panel"><h2>اسکور</h2><div class="grid">
+<div><label>کل رنز</label><input id="runs" type="number" min="0" value="0"></div><div><label>وکٹیں</label><input id="wickets" type="number" min="0" max="10" value="0"></div>
+<div><label>مکمل اوورز</label><input id="overs" type="number" min="0" value="0"></div><div><label>موجودہ اوور کی گیندیں (0 تا 5)</label><input id="balls" type="number" min="0" max="5" value="0"></div>
+<div><label>ہدف (اگر لاگو ہو)</label><input id="target" type="number" min="0" value="0"></div><div><label>رن ریٹ</label><input id="runrate" type="number" min="0" step="0.01" value="0.00"></div>
+</div><div class="actions"><button onclick="addRuns(1)">+1 رن</button><button onclick="addRuns(2)">+2 رنز</button><button onclick="addRuns(3)">+3 رنز</button><button onclick="addRuns(4)">چوکا 4</button><button onclick="addRuns(6)">چھکا 6</button><button class="red" onclick="addWicket()">وکٹ</button><button class="secondary" onclick="nextBall()">ڈاٹ بال</button><button class="secondary" onclick="undoBall()">گیند واپس</button><button class="gold" onclick="newInnings()">نئی اننگز</button></div></div>
+<div class="panel"><h2>بیٹسمین اور بولر</h2><div class="grid">
+<div><label>بیٹسمین کا نام</label><input id="batter" placeholder="مثلاً Babar Azam"></div><div><label>بیٹسمین کی تصویر کا URL (اختیاری)</label><input id="batterPhoto" placeholder="https://...jpg"></div>
+<div><label>بیٹسمین کے رنز</label><input id="batterRuns" type="number" min="0" value="0"></div><div><label>بیٹسمین کی گیندیں</label><input id="batterBalls" type="number" min="0" value="0"></div>
+<div><label>بولر کا نام</label><input id="bowler" placeholder="مثلاً Shaheen Afridi"></div><div><label>بولر کی تصویر کا URL (اختیاری)</label><input id="bowlerPhoto" placeholder="https://...jpg"></div>
+<div><label>بولر کے دیے گئے رنز</label><input id="bowlerRuns" type="number" min="0" value="0"></div><div><label>بولر کی وکٹیں</label><input id="bowlerWickets" type="number" min="0" value="0"></div>
+</div></div>
+<div class="panel"><div class="row"><button class="gold" onclick="saveScore()">💾 اسکور اپڈیٹ کریں</button><button class="secondary" onclick="loadScore()">محفوظ اسکور لوڈ کریں</button></div><p id="status" class="status">سرور کی ترتیب مکمل ہونے کے بعد اسٹیٹس یہاں نظر آئے گا۔</p></div>
+</div>
+<script src="config.js"></script><script>
+const ids=['match','ticker','team1','flag1','team2','flag2','runs','wickets','overs','balls','target','runrate','batter','batterPhoto','batterRuns','batterBalls','bowler','bowlerPhoto','bowlerRuns','bowlerWickets'];
+function num(id){return Math.max(0,Number(document.getElementById(id).value)||0)}
+function status(t){document.getElementById('status').textContent=t}
+function getData(){const d={};ids.forEach(id=>{const el=document.getElementById(id);d[id]=el.type==='number'?num(id):el.value.trim()});d.wickets=Math.min(10,d.wickets);d.balls=Math.min(5,d.balls);d.updatedAt=Date.now();return d}
+function putData(d){ids.forEach(id=>{if(d[id]!==undefined)document.getElementById(id).value=d[id]})}
+function url(){const c=window.CRICKET_CONFIG||{};if(!c.databaseURL||c.databaseURL.includes('PASTE_'))throw new Error('config.js میں Firebase databaseURL ابھی درج نہیں کی گئی۔');return c.databaseURL.replace(/\/$/,'')+'/'+(c.room||'main-match')+'.json'}
+async function saveScore(){try{status('اسکور بھیجا جا رہا ہے…');const r=await fetch(url(),{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(getData())});if(!r.ok)throw new Error('Firebase نے جواب دیا: '+r.status);status('✅ اسکور محفوظ ہوگیا۔ OBS اسکور بورڈ چند لمحوں میں اپڈیٹ ہو جائے گا۔')}catch(e){status('❌ رابطہ نہیں ہوا: '+e.message)}}
+async function loadScore(){try{const r=await fetch(url(),{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();if(!d){status('ابھی کوئی محفوظ اسکور نہیں۔ اپنی تفصیلات درج کرکے اپڈیٹ کریں۔');return}putData(d);status('محفوظ اسکور لوڈ ہوگیا۔')}catch(e){status('❌ '+e.message)}}
+function addBall(){let b=num('balls')+1;if(b>=6){document.getElementById('overs').value=num('overs')+1;b=0}document.getElementById('balls').value=b;document.getElementById('batterBalls').value=num('batterBalls')+1}
+function addRuns(n){document.getElementById('runs').value=num('runs')+n;document.getElementById('batterRuns').value=num('batterRuns')+n;addBall()}
+function addWicket(){document.getElementById('wickets').value=Math.min(10,num('wickets')+1);document.getElementById('bowlerWickets').value=num('bowlerWickets')+1;addBall()}
+function nextBall(){addBall()}
+function undoBall(){let b=num('balls');if(b>0)document.getElementById('balls').value=b-1;else if(num('overs')>0){document.getElementById('overs').value=num('overs')-1;document.getElementById('balls').value=5}document.getElementById('batterBalls').value=Math.max(0,num('batterBalls')-1)}
+function newInnings(){if(!confirm('کیا آپ نئی اننگز شروع کرنا چاہتے ہیں؟ موجودہ اسکور صفر ہو جائے گا۔'))return;['runs','wickets','overs','balls','batterRuns','batterBalls','bowlerRuns','bowlerWickets'].forEach(id=>document.getElementById(id).value=0);saveScore()}
+loadScore();
+</script></body></html>
